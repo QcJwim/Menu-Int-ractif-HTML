@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Andy Café Torréfacteur</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Lato', sans-serif;
+            background: linear-gradient(135deg, #3e2723 0%, #1a100c 100%);
+            min-height: 100vh;
+            color: #f5e6d3;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .coffee-beans {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bean {
+            position: absolute;
+            width: 30px;
+            height: 40px;
+            background: #5d4037;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            opacity: 0.15;
+        }
+
+        .bean::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(10deg);
+            width: 2px;
+            height: 70%;
+            background: #3e2723;
+            border-radius: 2px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            width: 350px;
+            height: auto;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            color: #d7ccc8;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: #a1887f;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+        }
+
+        .header-row {
+            display: grid;
+            grid-template-columns: 1fr 100px 100px;
+            gap: 10px;
+            padding: 15px 20px;
+            background: linear-gradient(145deg, #5d4037, #4e342e);
+            border-radius: 15px 15px 0 0;
+            font-weight: 700;
+            color: #ffcc80;
+            font-size: 0.9rem;
+        }
+
+        .menu {
+            background: linear-gradient(145deg, rgba(62, 39, 35, 0.9), rgba(26, 16, 12, 0.95));
+            border-radius: 20px;
+            border: 1px solid #5d4037;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .menu-item {
+            display: grid;
+            grid-template-columns: 1fr 100px 100px;
+            gap: 10px;
+            padding: 18px 20px;
+            border-bottom: 1px solid rgba(93, 64, 55, 0.4);
+            transition: background 0.3s;
+            align-items: center;
+        }
+
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+
+        .menu-item:hover {
+            background: rgba(141, 110, 99, 0.2);
+        }
+
+        .item-name {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #f5e6d3;
+        }
+
+        .price {
+            position: relative;
+            cursor: pointer;
+            padding: 8px 12px;
+            background: linear-gradient(145deg, #5d4037, #4e342e);
+            border-radius: 20px;
+            font-weight: 700;
+            color: #ffcc80;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .price:hover {
+            border-color: #ffcc80;
+            transform: scale(1.1);
+            box-shadow: 0 5px 20px rgba(255, 204, 128, 0.3);
+        }
+
+        .price .hot, .price .cold {
+            display: none;
+            position: absolute;
+            bottom: calc(100% + 15px);
+            left: 50%;
+            transform: translateX(-50%);
+            width: 250px;
+            height: 250px;
+            background: #fff;
+            border-radius: 12px;
+            padding: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            z-index: 100;
+        }
+
+        .price:hover .hot,
+        .price:hover .cold {
+            display: block;
+            animation: fadeIn 0.3s ease;
+            z-index: 1000;
+        }
+
+        .price:hover .hot::after,
+        .price:hover .cold::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 10px 10px 0;
+            border-style: solid;
+            border-color: #fff transparent transparent;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+
+        .hot-img, .cold-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .no-price {
+            color: #5d4037;
+            font-style: italic;
+            opacity: 0.5;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #8d6e63;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="coffee-beans" id="beans"></div>
+    
+    <div class="container">
+        <header>
+            <div class="logo">
+                <img src="https://andycafetorrefacteur.com/cdn/shop/files/Creation_sans_titre_6.png?height=180&v=1742837988" alt="Andy Café">
+            </div>
+        </header>
+
+        <div class="menu">
+            <div class="header-row">
+                <span></span>
+                <span>🔥 CHAUD</span>
+                <span>❄️ GLACÉ</span>
+            </div>
+
+            <div class="menu-item">
+                <span class="item-name">☕ Latte</span>
+                <div class="price">
+                    4,75 / 5,50
+                    <div class="hot"><img src="https://images.unsplash.com/photo-1570968915860-54d5c301fa9f?w=300&h=300&fit=crop" class="hot-img" alt="Latte"></div>
+                </div>
+                <div class="price">
+                    5€
+                    <div class="cold"><img src="https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?w=300&h=300&fit=crop" class="cold-img" alt="Iced Latte"></div>
+                </div>
+            </div>
+
+            <div class="menu-item">
+                <span class="item-name">☕ Cappuccino / Flat White</span>
+                <div class="price">
+                    4,75 / 5,50
+                    <div class="hot"><img src="https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=300&h=300&fit=crop" class="hot-img" alt="Cappuccino"></div>
+                </div>
+                <div class="price no-price">—</div>
+            </div>
+
+            <div class="menu-item">
+                <span class="item-name">☕ Americano / Long Black</span>
+                <div class="price">
+                    4,50€
+                    <div class="hot"><img src="https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=300&h=300&fit=crop" class="hot-img" alt="Americano"></div>
+                </div>
+                <div class="price">5€</div>
+            </div>
+
+            <div class="menu-item">
+                <span class="item-name">☕ Espresso (S/D, Ristretto, Lungo)</span>
+                <div class="price">
+                    4€
+                    <div class="hot"><img src="https://images.unsplash.com/photo-1510707577719-ae7c14805e3a?w=300&h=300&fit=crop" class="hot-img" alt="Espresso"></div>
+                </div>
+                <div class="price no-price">—</div>
+            </div>
+
+            <div class="menu-item">
+                <span class="item-name">☕ Cortado</span>
+                <div class="price">
+                    4,50€
+                    <div class="hot"><img src="https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?w=300&h=300&fit=crop" class="hot-img" alt="Cortado"></div>
+                </div>
+                <div class="price no-price">—</div>
+            </div>
+
+            <div class="menu-item">
+                <span class="item-name">☕ Chai Latte (+1$ Dirty ☕)</span>
+                <div class="price">
+                    4,50€
+                    <div class="hot"><img src="https://images.unsplash.com/photo-1571934811356-5cc061b6821f?w=300&h=300&fit=crop" class="hot-img" alt="Chai Latte"></div>
+                </div>
+                <div class="price">
+                    5€
+                    <div class="cold"><img src="https://images.unsplash.com/photo-1558857563-b371033873b8?w=300&h=300&fit=crop" class="cold-img" alt="Iced Chai"></div>
+                </div>
+            </div>
+
+            <div class="menu-item">
+                <span class="item-name">🍵 Matcha Latte</span>
+                <div class="price">
+                    4,75 / 5,50
+                    <div class="hot"><img src="https://images.unsplash.com/photo-1536256263959-770b48d82b0a?w=300&h=300&fit=crop" class="hot-img" alt="Matcha Latte"></div>
+                </div>
+                <div class="price">
+                    5,25€
+                    <div class="cold"><img src="https://images.unsplash.com/photo-1515823664-b6e1656168c5?w=300&h=300&fit=crop" class="cold-img" alt="Iced Matcha"></div>
+                </div>
+            </div>
+
+            <div class="menu-item">
+                <span class="item-name">🍫 Mocha</span>
+                <div class="price">
+                    5,50 / 6,50
+                    <div class="hot"><img src="https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?w=300&h=300&fit=crop" class="hot-img" alt="Mocha"></div>
+                </div>
+                <div class="price">
+                    6€
+                    <div class="cold"><img src="https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=300&h=300&fit=crop" class="cold-img" alt="Iced Mocha"></div>
+                </div>
+            </div>
+
+            <div class="menu-item">
+                <span class="item-name">☁️ Nuages (Matcha, Chai, Latte)</span>
+                <div class="price no-price">—</div>
+                <div class="price">
+                    7,50€
+                    <div class="cold"><img src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=300&h=300&fit=crop" class="cold-img" alt="Cloud Latte"></div>
+                </div>
+            </div>
+
+            <div class="menu-item">
+                <span class="item-name">🍫 Chocolat chaud</span>
+                <div class="price">
+                    3,50€
+                    <div class="hot"><img src="https://images.unsplash.com/photo-1542990253-0d0f5be5f0ed?w=300&h=300&fit=crop" class="hot-img" alt="Hot Chocolate"></div>
+                </div>
+                <div class="price no-price">—</div>
+            </div>
+
+            <div class="menu-item">
+                <span class="item-name">🍋 Limonade sans sucre</span>
+                <div class="price no-price">—</div>
+                <div class="price">
+                    3€
+                    <div class="cold"><img src="https://images.unsplash.com/photo-1621263764928-df1444c5e859?w=300&h=300&fit=crop" class="cold-img" alt="Lemonade"></div>
+                </div>
+            </div>
+
+            <div class="menu-item">
+                <span class="item-name">🧃 Jus sans sucre</span>
+                <div class="price no-price">—</div>
+                <div class="price">
+                    3€
+                    <div class="cold"><img src="https://images.unsplash.com/photo-1600271884422-7e2a8e2f6a79?w=300&h=300&fit=crop" class="cold-img" alt="Juice"></div>
+                </div>
+            </div>
+
+            <div class="menu-item">
+                <span class="item-name">🥛 Lait au chocolat</span>
+                <div class="price no-price">—</div>
+                <div class="price">
+                    3,50€
+                    <div class="cold"><img src="https://images.unsplash.com/photo-1557142046-c704a3a1e8f2?w=300&h=300&fit=crop" class="cold-img" alt="Chocolate Milk"></div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <script>
+        function createCoffeeBeans() {
+            const container = document.getElementById('beans');
+            for (let i = 0; i < 25; i++) {
+                const bean = document.createElement('div');
+                bean.className = 'bean';
+                bean.style.left = Math.random() * 100 + '%';
+                bean.style.top = Math.random() * 100 + '%';
+                bean.style.transform = `rotate(${Math.random() * 360}deg)`;
+                bean.style.opacity = 0.05 + Math.random() * 0.15;
+                container.appendChild(bean);
+            }
+        }
+        createCoffeeBeans();
+    </script>
+</body>
+</html>
