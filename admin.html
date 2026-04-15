@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Andy Café - Administration</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Lato', sans-serif;
+            background: linear-gradient(135deg, #3e2723 0%, #1a100c 100%);
+            min-height: 100vh;
+            color: #f5e6d3;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: #d7ccc8;
+            margin-bottom: 10px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 700;
+            transition: all 0.3s;
+        }
+
+        .btn-save {
+            background: #4caf50;
+            color: white;
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1rem;
+            margin-top: 20px;
+        }
+
+        .btn-save:hover {
+            background: #45a049;
+        }
+
+        .btn-reset {
+            background: #f44336;
+            color: white;
+            width: 100%;
+            padding: 12px;
+            font-size: 1rem;
+            margin-top: 10px;
+        }
+
+        .btn-reset:hover {
+            background: #d32f2f;
+        }
+
+        .btn-delete {
+            background: #b71c1c;
+            color: white;
+            padding: 8px 15px;
+            font-size: 0.8rem;
+        }
+
+        .btn-delete:hover {
+            background: #c62828;
+        }
+
+        .btn-add {
+            background: #2196f3;
+            color: white;
+            padding: 10px 20px;
+            font-size: 0.9rem;
+        }
+
+        .btn-add:hover {
+            background: #1976d2;
+        }
+
+        .admin-section {
+            background: rgba(62, 39, 35, 0.9);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #5d4037;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            color: #ffcc80;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #5d4037;
+        }
+
+        .admin-header {
+            display: grid;
+            grid-template-columns: 50px 1fr 140px 140px 80px;
+            gap: 10px;
+            padding: 10px;
+            background: #5d4037;
+            border-radius: 10px;
+            font-weight: 700;
+            color: #ffcc80;
+            margin-bottom: 10px;
+        }
+
+        .product-row {
+            display: grid;
+            grid-template-columns: 50px 1fr 140px 140px 80px;
+            gap: 10px;
+            padding: 12px 10px;
+            border-bottom: 1px solid rgba(93, 64, 55, 0.5);
+            align-items: center;
+        }
+
+        .product-row:hover {
+            background: rgba(141, 110, 99, 0.2);
+        }
+
+        .product-row.disabled {
+            opacity: 0.5;
+        }
+
+        .toggle {
+            width: 50px;
+            height: 26px;
+            background: #4e342e;
+            border-radius: 13px;
+            cursor: pointer;
+            position: relative;
+            transition: background 0.3s;
+        }
+
+        .toggle.active {
+            background: #4caf50;
+        }
+
+        .toggle::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+
+        .toggle.active::after {
+            transform: translateX(24px);
+        }
+
+        .product-name {
+            font-weight: 700;
+            color: #f5e6d3;
+        }
+
+        .product-name.disabled {
+            text-decoration: line-through;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 8px 12px;
+            background: #3e2723;
+            border: 1px solid #5d4037;
+            border-radius: 8px;
+            color: #ffcc80;
+            font-size: 0.9rem;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #ffcc80;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .message {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #4caf50;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-weight: 700;
+            display: none;
+            z-index: 1000;
+        }
+
+        .add-form {
+            background: rgba(78, 52, 46, 0.9);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 2px dashed #8d6e63;
+        }
+
+        .add-form h3 {
+            color: #ffcc80;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 140px 140px auto;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .back-link {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            color: #8d6e63;
+            text-decoration: none;
+            font-size: 0.9rem;
+            opacity: 0.6;
+            transition: opacity 0.3s;
+        }
+
+        .back-link:hover {
+            opacity: 1;
+        }
+
+        .back-link span {
+            font-size: 1.2rem;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <a href="menu-cafe.html" class="back-link"><span>←</span> Retour au menu</a>
+
+    <div class="container">
+        <header>
+            <h1>⚙️ Administration du Menu</h1>
+            <p style="color: #a1887f;">Modifiez les prix et gérez les produits</p>
+        </header>
+
+        <div class="add-form">
+            <h3>+ Ajouter un nouveau produit</h3>
+            <div class="form-row">
+                <input type="text" id="newName" placeholder="Nom du produit (ex: ☕ Mon Café)">
+                <input type="text" id="newHot" placeholder="Prix Chaud">
+                <input type="text" id="newCold" placeholder="Prix Glacé">
+                <button class="btn btn-add" onclick="addProduct()">Ajouter</button>
+            </div>
+        </div>
+
+        <div class="admin-section">
+            <div class="section-title">☕ Produits du Menu</div>
+            <div class="admin-header">
+                <span>Actif</span>
+                <span>Produit</span>
+                <span>Prix Chaud</span>
+                <span>Prix Glacé</span>
+                <span>Action</span>
+            </div>
+
+            <div id="product-list"></div>
+        </div>
+
+        <div class="admin-section">
+            <div class="section-title">⚡ Extras & Infos</div>
+            <div class="form-row" style="margin-bottom: 15px;">
+                <input type="text" id="extraLine1" placeholder="Ligne 1 (ex: Shot Espresso (+2,00) | Mousse froide (+1,00))">
+            </div>
+            <div class="form-row" style="margin-bottom: 15px;">
+                <input type="text" id="extraLine2" placeholder="Ligne 2 (ex: Sirop : Vanille | Noisette | Caramel (+0,50))">
+            </div>
+            <div class="form-row">
+                <input type="text" id="extraLine3" placeholder="Ligne 3 (ex: Choix de lait : Vache | Avoine | Sans lactose)">
+            </div>
+        </div>
+
+        <button class="btn btn-save" onclick="saveChanges()">💾 Enregistrer les modifications</button>
+        <button class="btn btn-reset" onclick="resetToDefault()">🔄 Réinitialiser (données par défaut)</button>
+    </div>
+
+    <div class="message" id="message">Modifications enregistrées !</div>
+
+    <script>
+        const defaultProducts = [
+            { id: 1, name: "☕ Latte", hot: "4,75 / 5,50", cold: "5", active: true },
+            { id: 2, name: "☕ Cappuccino", hot: "4,75 / 5,50", cold: "", active: true },
+            { id: 14, name: "☕ Flat White", hot: "4,75 / 5,50", cold: "", active: true },
+            { id: 3, name: "☕ Americano / Long Black", hot: "4,50", cold: "4,50", active: true },
+            { id: 4, name: "☕ Espresso (S/D, Ristretto, Lungo)", hot: "4", cold: "", active: true },
+            { id: 5, name: "☕ Cortado", hot: "4,50", cold: "", active: true },
+            { id: 6, name: "☕ Chai Latte (+1$ Dirty ☕)", hot: "4,50 / 5,50", cold: "5", active: true },
+            { id: 7, name: "🍵 Matcha Latte", hot: "4,75 / 5,50", cold: "5,25", active: true },
+            { id: 8, name: "🍫 Mocha", hot: "5,50 / 6,50", cold: "6", active: true },
+            { id: 9, name: "☁️ Nuages (Matcha, Chai, Latte)", hot: "", cold: "7,50", active: true },
+            { id: 10, name: "🍫 Chocolat chaud", hot: "3,50", cold: "", active: true },
+            { id: 11, name: "🍋 Limonade sans sucre", hot: "", cold: "3", active: true },
+            { id: 12, name: "🧃 Jus sans sucre", hot: "", cold: "3", active: true },
+            { id: 13, name: "🥛 Lait au chocolat", hot: "", cold: "3,50", active: true }
+        ];
+
+        const defaultExtras = {
+            line1: "☕ Shot Espresso (+2,00) | 🫧 Mousse froide (+1,00)",
+            line2: "🍦 Vanille | 🐿️ Noisette | 🍯 Caramel | 🍓 Fraise | 🫐 Bleuet (+0,50)",
+            line3: "🐮 Vache | 🌾 Avoine | 🚫 Sans lactose"
+        };
+
+        let products = [];
+        let extras = {};
+        let nextId = 15;
+
+        function loadProducts() {
+            const saved = localStorage.getItem('menuProducts');
+            if (saved) {
+                const data = JSON.parse(saved);
+                products = data.products || defaultProducts;
+                extras = data.extras || { ...defaultExtras };
+                const maxId = Math.max(...products.map(p => p.id), 0);
+                nextId = maxId + 1;
+            } else {
+                products = JSON.parse(JSON.stringify(defaultProducts));
+                extras = { ...defaultExtras };
+                nextId = 15;
+            }
+            renderProducts();
+            loadExtras();
+        }
+
+        function renderProducts() {
+            const list = document.getElementById('product-list');
+            list.innerHTML = products.map(p => `
+                <div class="product-row ${p.active ? '' : 'disabled'}">
+                    <div class="toggle ${p.active ? 'active' : ''}" onclick="toggleProduct(${p.id})"></div>
+                    <span class="product-name ${p.active ? '' : 'disabled'}">${p.name}</span>
+                    <input type="text" value="${p.hot}" placeholder="—" onchange="updatePrice(${p.id}, 'hot', this.value)">
+                    <input type="text" value="${p.cold}" placeholder="—" onchange="updatePrice(${p.id}, 'cold', this.value)">
+                    <button class="btn btn-delete" onclick="deleteProduct(${p.id})">Suppr</button>
+                </div>
+            `).join('');
+        }
+
+        function loadExtras() {
+            document.getElementById('extraLine1').value = extras.line1 || '';
+            document.getElementById('extraLine2').value = extras.line2 || '';
+            document.getElementById('extraLine3').value = extras.line3 || '';
+        }
+
+        function toggleProduct(id) {
+            const product = products.find(p => p.id === id);
+            if (product) {
+                product.active = !product.active;
+                renderProducts();
+            }
+        }
+
+        function updatePrice(id, type, value) {
+            const product = products.find(p => p.id === id);
+            if (product) {
+                if (type === 'hot') {
+                    product.hot = value;
+                } else {
+                    product.cold = value;
+                }
+            }
+        }
+
+        function addProduct() {
+            const name = document.getElementById('newName').value.trim();
+            const hot = document.getElementById('newHot').value.trim();
+            const cold = document.getElementById('newCold').value.trim();
+
+            if (!name) {
+                alert('Veuillez entrer un nom de produit');
+                return;
+            }
+
+            products.push({
+                id: nextId++,
+                name: name,
+                hot: hot,
+                cold: cold,
+                active: true
+            });
+
+            document.getElementById('newName').value = '';
+            document.getElementById('newHot').value = '';
+            document.getElementById('newCold').value = '';
+
+            renderProducts();
+            saveChanges();
+        }
+
+        function deleteProduct(id) {
+            if (confirm('Voulez-vous vraiment supprimer ce produit ?')) {
+                products = products.filter(p => p.id !== id);
+                renderProducts();
+                saveChanges();
+            }
+        }
+
+        function saveChanges() {
+            extras = {
+                line1: document.getElementById('extraLine1').value,
+                line2: document.getElementById('extraLine2').value,
+                line3: document.getElementById('extraLine3').value
+            };
+
+            localStorage.setItem('menuProducts', JSON.stringify({
+                products: products,
+                extras: extras
+            }));
+            
+            const message = document.getElementById('message');
+            message.style.display = 'block';
+            setTimeout(() => {
+                message.style.display = 'none';
+            }, 2000);
+        }
+
+        function resetToDefault() {
+            if (confirm('Voulez-vous vraiment réinitialiser toutes les données ?')) {
+                products = JSON.parse(JSON.stringify(defaultProducts));
+                extras = { ...defaultExtras };
+                nextId = 15;
+                localStorage.setItem('menuProducts', JSON.stringify({
+                    products: products,
+                    extras: extras
+                }));
+                renderProducts();
+                loadExtras();
+                
+                const message = document.getElementById('message');
+                message.textContent = 'Données réinitialisées !';
+                message.style.display = 'block';
+                setTimeout(() => {
+                    message.style.display = 'none';
+                    message.textContent = 'Modifications enregistrées !';
+                }, 2000);
+            }
+        }
+
+        loadProducts();
+    </script>
+</body>
+</html>

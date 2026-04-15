@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Andy Café Torréfacteur</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -15,10 +15,18 @@
         body {
             font-family: 'Lato', sans-serif;
             background: linear-gradient(135deg, #3e2723 0%, #1a100c 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
             min-height: 100vh;
             color: #f5e6d3;
             position: relative;
             overflow-x: hidden;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         .coffee-beans {
@@ -29,15 +37,38 @@
             height: 100%;
             pointer-events: none;
             z-index: 0;
+            overflow: hidden;
         }
 
         .bean {
             position: absolute;
-            width: 30px;
-            height: 40px;
+            width: 25px;
+            height: 35px;
             background: #5d4037;
             border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-            opacity: 0.15;
+            opacity: 0.12;
+            animation: beanFloat 20s ease-in-out infinite, beanRotate 15s linear infinite;
+        }
+
+        .bean:nth-child(odd) {
+            animation-duration: 25s, 18s;
+        }
+
+        .bean:nth-child(even) {
+            animation-duration: 22s, 20s;
+            animation-direction: reverse;
+        }
+
+        @keyframes beanFloat {
+            0%, 100% { transform: translateY(0) translateX(0); }
+            25% { transform: translateY(-30px) translateX(15px); }
+            50% { transform: translateY(-15px) translateX(-10px); }
+            75% { transform: translateY(-40px) translateX(5px); }
+        }
+
+        @keyframes beanRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         .bean::before {
@@ -50,6 +81,16 @@
             height: 70%;
             background: #3e2723;
             border-radius: 2px;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
 
         .container {
@@ -78,20 +119,15 @@
             width: 100%;
             height: auto;
             object-fit: contain;
+            animation: slideUp 0.8s ease-out, pulse 4s ease-in-out infinite;
         }
 
-        h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.2rem;
-            color: #d7ccc8;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-            margin-bottom: 5px;
-        }
-
-        .subtitle {
-            color: #a1887f;
-            font-size: 0.9rem;
-            letter-spacing: 2px;
+        .menu {
+            background: linear-gradient(145deg, rgba(62, 39, 35, 0.9), rgba(26, 16, 12, 0.95));
+            border-radius: 20px;
+            border: 1px solid #5d4037;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            animation: slideUp 0.8s ease-out 0.2s both;
         }
 
         .header-row {
@@ -121,7 +157,22 @@
             border-bottom: 1px solid rgba(93, 64, 55, 0.4);
             transition: background 0.3s;
             align-items: center;
+            animation: slideUp 0.5s ease-out both;
         }
+
+        .menu-item:nth-child(1) { animation-delay: 0.1s; }
+        .menu-item:nth-child(2) { animation-delay: 0.15s; }
+        .menu-item:nth-child(3) { animation-delay: 0.2s; }
+        .menu-item:nth-child(4) { animation-delay: 0.25s; }
+        .menu-item:nth-child(5) { animation-delay: 0.3s; }
+        .menu-item:nth-child(6) { animation-delay: 0.35s; }
+        .menu-item:nth-child(7) { animation-delay: 0.4s; }
+        .menu-item:nth-child(8) { animation-delay: 0.45s; }
+        .menu-item:nth-child(9) { animation-delay: 0.5s; }
+        .menu-item:nth-child(10) { animation-delay: 0.55s; }
+        .menu-item:nth-child(11) { animation-delay: 0.6s; }
+        .menu-item:nth-child(12) { animation-delay: 0.65s; }
+        .menu-item:nth-child(13) { animation-delay: 0.7s; }
 
         .menu-item:last-child {
             border-bottom: none;
@@ -131,10 +182,18 @@
             background: rgba(141, 110, 99, 0.2);
         }
 
+        .menu-item.disabled {
+            opacity: 0.4;
+        }
+
         .item-name {
             font-size: 1rem;
             font-weight: 700;
             color: #f5e6d3;
+        }
+
+        .item-name.disabled {
+            text-decoration: line-through;
         }
 
         .price {
@@ -157,6 +216,10 @@
             box-shadow: 0 5px 20px rgba(255, 204, 128, 0.3);
         }
 
+        .price:active {
+            transform: scale(0.95);
+        }
+
         .price .hot, .price .cold {
             display: none;
             position: absolute;
@@ -169,14 +232,13 @@
             border-radius: 12px;
             padding: 8px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-            z-index: 100;
+            z-index: 1000;
         }
 
         .price:hover .hot,
         .price:hover .cold {
             display: block;
             animation: fadeIn 0.3s ease;
-            z-index: 1000;
         }
 
         .price:hover .hot::after,
@@ -210,19 +272,13 @@
             cursor: default;
         }
 
-        footer {
-            text-align: center;
-            margin-top: 30px;
-            color: #8d6e63;
-            font-size: 0.85rem;
-        }
-
         .extras {
             background: linear-gradient(145deg, rgba(62, 39, 35, 0.9), rgba(26, 16, 12, 0.95));
             border-radius: 15px;
             border: 1px solid #5d4037;
             padding: 20px;
             margin-top: 20px;
+            animation: slideUp 0.8s ease-out 0.8s both;
         }
 
         .extras-title {
@@ -241,6 +297,30 @@
         .extras-content p {
             margin-bottom: 8px;
         }
+
+        .admin-link {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background: rgba(93, 64, 55, 0.8);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 1.2rem;
+            opacity: 0.4;
+            transition: all 0.3s;
+            z-index: 100;
+            animation: slideUp 1s ease-out 1s both;
+        }
+
+        .admin-link:hover {
+            opacity: 1;
+            transform: rotate(90deg);
+        }
     </style>
 </head>
 <body>
@@ -249,7 +329,7 @@
     <div class="container">
         <header>
             <div class="logo">
-                <img src="https://andycafetorrefacteur.com/cdn/shop/files/Creation_sans_titre_6.png?height=180&v=1742837988" alt="Andy Café">
+                <img src="https://cdn.discordapp.com/attachments/1491147932911800532/1494091883901620324/logo_andy.png?ex=69e15900&is=69e00780&hm=9b37a7579c652a79c8f5fa37567f88b5d1d465a8b26c9e0f205a5f0b14fd5d70&" alt="Andy Café">
             </div>
         </header>
 
@@ -260,162 +340,108 @@
                 <span>❄️ GLACÉ</span>
             </div>
 
-            <div class="menu-item">
-                <span class="item-name">☕ Latte</span>
-                <div class="price">
-                    4,75 / 5,50
-                    <div class="hot"><img src="https://images.unsplash.com/photo-1570968915860-54d5c301fa9f?w=300&h=300&fit=crop" class="hot-img" alt="Latte"></div>
-                </div>
-                <div class="price">
-                    5
-                    <div class="cold"><img src="https://cdn.discordapp.com/attachments/1491147932911800532/1491148078403682365/latte-glace-lerreur-courante-qui-altere-le-gout-et-comment-leviter-7b2657de.jpg?ex=69d6a35e&is=69d551de&hm=af4e69b7383a4f4db27c76425f93a260dd945dc6a3b0df87a33fc443ab26ce5d&" class="cold-img" alt="Iced Latte"></div>
-                </div>
-            </div>
-
-            <div class="menu-item">
-                <span class="item-name">☕ Cappuccino / Flat White</span>
-                <div class="price">
-                    4,75 / 5,50
-                    <div class="hot"><img src="https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=300&h=300&fit=crop" class="hot-img" alt="Cappuccino"></div>
-                </div>
-                <div class="price no-price">—</div>
-            </div>
-
-            <div class="menu-item">
-                <span class="item-name">☕ Americano / Long Black</span>
-                <div class="price">
-                    4,50
-                    <div class="hot"><img src="https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=300&h=300&fit=crop" class="hot-img" alt="Americano"></div>
-                </div>
-                <div class="price">4,50
-                    <div class="cold"><img src="https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=300&h=300&fit=crop" class="cold-img" alt="Iced Americano"></div>
-                </div>
-            </div>
-
-            <div class="menu-item">
-                <span class="item-name">☕ Espresso (S/D, Ristretto, Lungo)</span>
-                <div class="price">
-                    4
-                    <div class="hot"><img src="https://images.unsplash.com/photo-1510707577719-ae7c14805e3a?w=300&h=300&fit=crop" class="hot-img" alt="Espresso"></div>
-                </div>
-                <div class="price no-price">—</div>
-            </div>
-
-            <div class="menu-item">
-                <span class="item-name">☕ Cortado</span>
-                <div class="price">
-                    4,50
-                    <div class="hot"><img src="https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?w=300&h=300&fit=crop" class="hot-img" alt="Cortado"></div>
-                </div>
-                <div class="price no-price">—</div>
-            </div>
-
-            <div class="menu-item">
-                <span class="item-name">☕ Chai Latte (+1$ Dirty ☕)</span>
-                <div class="price">
-                    4,50 / 5,50
-                    <div class="hot"><img src="https://images.unsplash.com/photo-1571934811356-5cc061b6821f?w=300&h=300&fit=crop" class="hot-img" alt="Chai Latte"></div>
-                </div>
-                <div class="price">
-                    5
-                    <div class="cold"><img src="https://images.unsplash.com/photo-1558857563-b371033873b8?w=300&h=300&fit=crop" class="cold-img" alt="Iced Chai"></div>
-                </div>
-            </div>
-
-            <div class="menu-item">
-                <span class="item-name">🍵 Matcha Latte</span>
-                <div class="price">
-                    4,75 / 5,50
-                    <div class="hot"><img src="https://images.unsplash.com/photo-1536256263959-770b48d82b0a?w=300&h=300&fit=crop" class="hot-img" alt="Matcha Latte"></div>
-                </div>
-                <div class="price">
-                    5,25
-                    <div class="cold"><img src="https://images.unsplash.com/photo-1515823664-b6e1656168c5?w=300&h=300&fit=crop" class="cold-img" alt="Iced Matcha"></div>
-                </div>
-            </div>
-
-            <div class="menu-item">
-                <span class="item-name">🍫 Mocha</span>
-                <div class="price">
-                    5,50 / 6,50
-                    <div class="hot"><img src="https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?w=300&h=300&fit=crop" class="hot-img" alt="Mocha"></div>
-                </div>
-                <div class="price">
-                    6
-                    <div class="cold"><img src="https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=300&h=300&fit=crop" class="cold-img" alt="Iced Mocha"></div>
-                </div>
-            </div>
-
-            <div class="menu-item">
-                <span class="item-name">☁️ Nuages (Matcha, Chai, Latte)</span>
-                <div class="price no-price">—</div>
-                <div class="price">
-                    7,50
-                    <div class="cold"><img src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=300&h=300&fit=crop" class="cold-img" alt="Cloud Latte"></div>
-                </div>
-            </div>
-
-            <div class="menu-item">
-                <span class="item-name">🍫 Chocolat chaud</span>
-                <div class="price">
-                    3,50
-                    <div class="hot"><img src="https://images.unsplash.com/photo-1542990253-0d0f5be5f0ed?w=300&h=300&fit=crop" class="hot-img" alt="Hot Chocolate"></div>
-                </div>
-                <div class="price no-price">—</div>
-            </div>
-
-            <div class="menu-item">
-                <span class="item-name">🍋 Limonade sans sucre</span>
-                <div class="price no-price">—</div>
-                <div class="price">
-                    3
-                    <div class="cold"><img src="https://images.unsplash.com/photo-1621263764928-df1444c5e859?w=300&h=300&fit=crop" class="cold-img" alt="Lemonade"></div>
-                </div>
-            </div>
-
-            <div class="menu-item">
-                <span class="item-name">🧃 Jus sans sucre</span>
-                <div class="price no-price">—</div>
-                <div class="price">
-                    3
-                    <div class="cold"><img src="https://images.unsplash.com/photo-1600271884422-7e2a8e2f6a79?w=300&h=300&fit=crop" class="cold-img" alt="Juice"></div>
-                </div>
-            </div>
-
-            <div class="menu-item">
-                <span class="item-name">🥛 Lait au chocolat</span>
-                <div class="price no-price">—</div>
-                <div class="price">
-                    3,50
-                    <div class="cold"><img src="https://images.unsplash.com/photo-1557142046-c704a3a1e8f2?w=300&h=300&fit=crop" class="cold-img" alt="Chocolate Milk"></div>
-                </div>
-</div>
+            <div id="menu-list"></div>
+        </div>
 
         <div class="extras">
             <div class="extras-title">⚡ EXTRAS & INFOS</div>
-            <div class="extras-content">
-                <p><strong>Extra :</strong> Shot Espresso (+2,00) | Sirop (+0,50) | Mousse froide (+1,00)</p>
-                <p><strong>Choix de lait :</strong> Vache | Avoine | Sans lactose</p>
+            <div class="extras-content" id="extras-content">
             </div>
         </div>
 
-    </div>
-
+        <a href="admin.html" class="admin-link" title="Administration">⚙️</a>
     </div>
 
     <script>
+        const defaultProducts = [
+            { id: 1, name: "☕ Latte", hot: "4,75 / 5,50", cold: "5", imageHot: "https://images.unsplash.com/photo-1570968915860-54d5c301fa9f?w=300&h=300&fit=crop", imageCold: "https://cdn.discordapp.com/attachments/1491147932911800532/1491148078403682365/latte-glace-lerreur-courante-qui-altere-le-gout-et-comment-leviter-7b2657de.jpg", active: true },
+            { id: 2, name: "☕ Cappuccino", hot: "4,75 / 5,50", cold: "", imageHot: "https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=300&h=300&fit=crop", imageCold: "", active: true },
+            { id: 14, name: "☕ Flat White", hot: "4,75 / 5,50", cold: "", imageHot: "https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=300&h=300&fit=crop", imageCold: "", active: true },
+            { id: 3, name: "☕ Americano / Long Black", hot: "4,50", cold: "4,50", imageHot: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=300&h=300&fit=crop", imageCold: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=300&h=300&fit=crop", active: true },
+            { id: 4, name: "☕ Espresso (S/D, Ristretto, Lungo)", hot: "4", cold: "", imageHot: "https://images.unsplash.com/photo-1510707577719-ae7c14805e3a?w=300&h=300&fit=crop", imageCold: "", active: true },
+            { id: 5, name: "☕ Cortado", hot: "4,50", cold: "", imageHot: "https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?w=300&h=300&fit=crop", imageCold: "", active: true },
+            { id: 6, name: "☕ Chai Latte (+1$ Dirty ☕)", hot: "4,50 / 5,50", cold: "5", imageHot: "https://images.unsplash.com/photo-1571934811356-5cc061b6821f?w=300&h=300&fit=crop", imageCold: "https://images.unsplash.com/photo-1558857563-b371033873b8?w=300&h=300&fit=crop", active: true },
+            { id: 7, name: "🍵 Matcha Latte", hot: "4,75 / 5,50", cold: "5,25", imageHot: "https://images.unsplash.com/photo-1536256263959-770b48d82b0a?w=300&h=300&fit=crop", imageCold: "https://images.unsplash.com/photo-1515823664-b6e1656168c5?w=300&h=300&fit=crop", active: true },
+            { id: 8, name: "🍫 Mocha", hot: "5,50 / 6,50", cold: "6", imageHot: "https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?w=300&h=300&fit=crop", imageCold: "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=300&h=300&fit=crop", active: true },
+            { id: 9, name: "☁️ Nuages (Matcha, Chai, Latte)", hot: "", cold: "7,50", imageHot: "", imageCold: "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=300&h=300&fit=crop", active: true },
+            { id: 10, name: "🍫 Chocolat chaud", hot: "3,50", cold: "", imageHot: "https://images.unsplash.com/photo-1542990253-0d0f5be5f0ed?w=300&h=300&fit=crop", imageCold: "", active: true },
+            { id: 11, name: "🍋 Limonade sans sucre", hot: "", cold: "3", imageHot: "", imageCold: "https://images.unsplash.com/photo-1621263764928-df1444c5e859?w=300&h=300&fit=crop", active: true },
+            { id: 12, name: "🧃 Jus sans sucre", hot: "", cold: "3", imageHot: "", imageCold: "https://images.unsplash.com/photo-1600271884422-7e2a8e2f6a79?w=300&h=300&fit=crop", active: true },
+            { id: 13, name: "🥛 Lait au chocolat", hot: "", cold: "3,50", imageHot: "", imageCold: "https://images.unsplash.com/photo-1557142046-c704a3a1e8f2?w=300&h=300&fit=crop", active: true }
+        ];
+
+        const defaultExtras = {
+            line1: "☕ Shot Espresso (+2,00) | 🫧 Mousse froide (+1,00)",
+            line2: "🍦 Vanille | 🐿️ Noisette | 🍯 Caramel | 🍓 Fraise | 🫐 Bleuet (+0,50)",
+            line3: "🐮 Vache | 🌾 Avoine | 🚫 Sans lactose"
+        };
+
+        function loadMenu() {
+            const saved = localStorage.getItem('menuProducts');
+            let products, extras;
+            
+            if (saved) {
+                const data = JSON.parse(saved);
+                products = data.products || defaultProducts;
+                extras = data.extras || defaultExtras;
+            } else {
+                products = defaultProducts;
+                extras = defaultExtras;
+                localStorage.setItem('menuProducts', JSON.stringify({
+                    products: products,
+                    extras: extras
+                }));
+            }
+
+            const list = document.getElementById('menu-list');
+            list.innerHTML = products.map(p => {
+                const hotDiv = p.hot ? `
+                    <div class="price">
+                        ${p.hot}
+                        ${p.imageHot ? `<div class="hot"><img src="${p.imageHot}" class="hot-img" alt="${p.name}"></div>` : ''}
+                    </div>
+                ` : '<div class="price no-price">—</div>';
+
+                const coldDiv = p.cold ? `
+                    <div class="price">
+                        ${p.cold}
+                        ${p.imageCold ? `<div class="cold"><img src="${p.imageCold}" class="cold-img" alt="${p.name}"></div>` : ''}
+                    </div>
+                ` : '<div class="price no-price">—</div>';
+
+                return `
+                    <div class="menu-item ${p.active ? '' : 'disabled'}">
+                        <span class="item-name ${p.active ? '' : 'disabled'}">${p.name}</span>
+                        ${hotDiv}
+                        ${coldDiv}
+                    </div>
+                `;
+            }).join('');
+
+            const extrasContent = document.getElementById('extras-content');
+            extrasContent.innerHTML = `
+                <p>${extras.line1}</p>
+                <p><strong>Sirop :</strong> ${extras.line2}</p>
+                <p>${extras.line3}</p>
+            `;
+        }
+
         function createCoffeeBeans() {
             const container = document.getElementById('beans');
-            for (let i = 0; i < 25; i++) {
+            for (let i = 0; i < 40; i++) {
                 const bean = document.createElement('div');
                 bean.className = 'bean';
                 bean.style.left = Math.random() * 100 + '%';
                 bean.style.top = Math.random() * 100 + '%';
-                bean.style.transform = `rotate(${Math.random() * 360}deg)`;
-                bean.style.opacity = 0.05 + Math.random() * 0.15;
+                bean.style.width = (15 + Math.random() * 20) + 'px';
+                bean.style.height = (20 + Math.random() * 25) + 'px';
+                bean.style.opacity = 0.05 + Math.random() * 0.12;
+                bean.style.animationDelay = (Math.random() * 10) + 's';
                 container.appendChild(bean);
             }
         }
+
+        loadMenu();
         createCoffeeBeans();
     </script>
 </body>
