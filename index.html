@@ -622,22 +622,45 @@
             const extrasContent = document.getElementById('extras-content');
             let extrasHtml = '<div class="extra-items">';
             
+            const extraImages = {
+                'Shot Espresso': 'Espresso',
+                'Mousse froide': 'Moussefroide'
+            };
+            
             (extras.extras || defaultExtras.extras).forEach(e => {
-                extrasHtml += `<div class="extra-item"><img src="images/Espresso.png" alt="${e.name}"><span class="extra-price">${e.name} (${e.price})</span></div>`;
+                const imgName = extraImages[e.name] || e.name;
+                extrasHtml += `<div class="extra-item"><img src="images/${imgName}.png" alt="${e.name}"><span class="extra-price">${e.name} (${e.price})</span></div>`;
             });
             extrasHtml += '</div>';
             
             extrasHtml += '<div class="extra-row"><span class="extra-title">Sirop :</span><span class="extra-price-inline">(+0,50)</span></div>';
             extrasHtml += '<div class="extra-items">';
+            
+            const syrupImages = {
+                'Vanille': 'Vanille',
+                'Noisette': 'noisette',
+                'Caramel': 'Caramel',
+                'Fraise': 'Fraise',
+                'Bleuet': 'Bleuet'
+            };
+            
             (extras.syrups || defaultExtras.syrups).forEach(s => {
-                extrasHtml += `<div class="extra-item"><img src="images/${s.name}.png" alt="${s.name}"> ${s.name}</div>`;
+                const imgName = syrupImages[s.name] || s.name;
+                extrasHtml += `<div class="extra-item"><img src="images/${imgName}.png" alt="${s.name}"> ${s.name}</div>`;
             });
             extrasHtml += '</div>';
             
             extrasHtml += '<div class="extra-row extra-title">Choix de lait :</div>';
             extrasHtml += '<div class="extra-items">';
+            
+            const milkImages = {
+                'Vache': 'LaitVache',
+                'Avoine': 'Avoine',
+                'Sans lactose': 'SansLactose'
+            };
+            
             (extras.milks || defaultExtras.milks).forEach(m => {
-                const imgName = m.name.replace(/\s/g, '').replace('Sanslactose', 'SansLactose');
+                const imgName = milkImages[m.name] || m.name;
                 extrasHtml += `<div class="extra-item"><img src="images/${imgName}.png" alt="${m.name}"> ${m.name}</div>`;
             });
             extrasHtml += '</div>';
