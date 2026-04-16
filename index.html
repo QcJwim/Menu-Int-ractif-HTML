@@ -190,6 +190,16 @@
             font-size: 1rem;
             font-weight: 700;
             color: #f5e6d3;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .product-icon {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+            border-radius: 8px;
         }
 
         .item-name.disabled {
@@ -321,9 +331,80 @@
             opacity: 1;
             transform: rotate(90deg);
         }
+
+        .juice-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.92);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .juice-overlay.show {
+            display: flex;
+        }
+
+        .juice-modal {
+            background: linear-gradient(145deg, #3e2723, #1a100c);
+            border: 2px solid #5d4037;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 450px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .juice-modal h2 {
+            color: #ffcc80;
+            font-size: 1.6rem;
+            margin-bottom: 25px;
+        }
+
+        .juice-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .juice-item {
+            background: #5d4037;
+            padding: 12px;
+            border-radius: 10px;
+            color: #f5e6d3;
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+
+        .juice-hint {
+            color: #8d6e63;
+            margin-top: 25px;
+            font-size: 0.85rem;
+        }
     </style>
 </head>
 <body>
+    <div class="juice-overlay" id="juiceOverlay">
+        <div class="juice-modal">
+            <h2>🧃 Jus Sans Sucre</h2>
+            <div class="juice-list">
+                <div class="juice-item">🍉 Melon d'eau</div>
+                <div class="juice-item">🫐 Bleuet</div>
+                <div class="juice-item">🔴 Canneberge</div>
+                <div class="juice-item">🐉 Fruit du dragon</div>
+                <div class="juice-item">🫐 Framboise bleue</div>
+                <div class="juice-item">🍓 Fraise</div>
+                <div class="juice-item">🥭 Mangue</div>
+                <div class="juice-item">🌺 Fruit de la passion</div>
+            </div>
+            <p class="juice-hint">Relâchez pour fermer</p>
+        </div>
+    </div>
+
     <div class="coffee-beans" id="beans"></div>
     
     <div class="container">
@@ -354,20 +435,20 @@
 
     <script>
         const defaultProducts = [
-            { id: 1, name: "☕ Latte", hot: "4,75 / 5,50", cold: "5", imageHot: "https://images.unsplash.com/photo-1570968915860-54d5c301fa9f?w=300&h=300&fit=crop", imageCold: "https://cdn.discordapp.com/attachments/1491147932911800532/1491148078403682365/latte-glace-lerreur-courante-qui-altere-le-gout-et-comment-leviter-7b2657de.jpg", active: true },
-            { id: 2, name: "☕ Cappuccino", hot: "4,75 / 5,50", cold: "", imageHot: "https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=300&h=300&fit=crop", imageCold: "", active: true },
-            { id: 14, name: "☕ Flat White", hot: "4,75 / 5,50", cold: "", imageHot: "https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=300&h=300&fit=crop", imageCold: "", active: true },
-            { id: 3, name: "☕ Americano / Long Black", hot: "4,50", cold: "4,50", imageHot: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=300&h=300&fit=crop", imageCold: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=300&h=300&fit=crop", active: true },
-            { id: 4, name: "☕ Espresso (S/D, Ristretto, Lungo)", hot: "4", cold: "", imageHot: "https://images.unsplash.com/photo-1510707577719-ae7c14805e3a?w=300&h=300&fit=crop", imageCold: "", active: true },
-            { id: 5, name: "☕ Cortado", hot: "4,50", cold: "", imageHot: "https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?w=300&h=300&fit=crop", imageCold: "", active: true },
-            { id: 6, name: "☕ Chai Latte (+1$ Dirty ☕)", hot: "4,50 / 5,50", cold: "5", imageHot: "https://images.unsplash.com/photo-1571934811356-5cc061b6821f?w=300&h=300&fit=crop", imageCold: "https://images.unsplash.com/photo-1558857563-b371033873b8?w=300&h=300&fit=crop", active: true },
-            { id: 7, name: "🍵 Matcha Latte", hot: "4,75 / 5,50", cold: "5,25", imageHot: "https://images.unsplash.com/photo-1536256263959-770b48d82b0a?w=300&h=300&fit=crop", imageCold: "https://images.unsplash.com/photo-1515823664-b6e1656168c5?w=300&h=300&fit=crop", active: true },
-            { id: 8, name: "🍫 Mocha", hot: "5,50 / 6,50", cold: "6", imageHot: "https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?w=300&h=300&fit=crop", imageCold: "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=300&h=300&fit=crop", active: true },
-            { id: 9, name: "☁️ Nuages (Matcha, Chai, Latte)", hot: "", cold: "7,50", imageHot: "", imageCold: "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=300&h=300&fit=crop", active: true },
-            { id: 10, name: "🍫 Chocolat chaud", hot: "3,50", cold: "", imageHot: "https://images.unsplash.com/photo-1542990253-0d0f5be5f0ed?w=300&h=300&fit=crop", imageCold: "", active: true },
-            { id: 11, name: "🍋 Limonade sans sucre", hot: "", cold: "3", imageHot: "", imageCold: "https://images.unsplash.com/photo-1621263764928-df1444c5e859?w=300&h=300&fit=crop", active: true },
-            { id: 12, name: "🧃 Jus sans sucre", hot: "", cold: "3", imageHot: "", imageCold: "https://images.unsplash.com/photo-1600271884422-7e2a8e2f6a79?w=300&h=300&fit=crop", active: true },
-            { id: 13, name: "🥛 Lait au chocolat", hot: "", cold: "3,50", imageHot: "", imageCold: "https://images.unsplash.com/photo-1557142046-c704a3a1e8f2?w=300&h=300&fit=crop", active: true }
+            { id: 1, name: "Latte", hot: "4,75 / 5,50", cold: "5", imageHot: "https://media.discordapp.net/attachments/1491147932911800532/1494108387594735736/emojis.com_latte.png?ex=69e1685e&is=69e016de&hm=3fc473f0adbcab011508efda2ecb0b52edb228a49c383a4db3f1624932e94d7d", imageCold: "https://media.discordapp.net/attachments/1491147932911800532/1494108387888074985/emojis.com_iced-latte-in-a-plasic-cup-with-flat-top-and-black-straw.png?ex=69e1685e&is=69e016de&hm=272c48e4f4c2798ab3dca2f595cf2ef52c293a86e47f75c4c25083ca582c1644", active: true },
+            { id: 2, name: "Cappuccino", hot: "4,75 / 5,50", cold: "", imageHot: "https://media.discordapp.net/attachments/1491147932911800532/1494109991135871037/emojis.com_cup-of-cappuccino-with-croissant.png?ex=69e169dd&is=69e0185d&hm=495a460439ad25ca09a894b49599ff186ec64b12768582d27ff211e1378339d0", imageCold: "", active: true },
+            { id: 14, name: "Flat White", hot: "4,75 / 5,50", cold: "", imageHot: "https://media.discordapp.net/attachments/1491147932911800532/1494123446055997510/emojis.com_a-cup-of-cappuccino-with-apple-logo-drawn-with-the-cream.png?ex=69e17665&is=69e024e5&hm=80cfcffeffa67f86c5a71100bf1043c4d66deb6aa1c43806a174f6353675b338", imageCold: "", active: true },
+            { id: 3, name: "Americano / Long Black", hot: "4,50", cold: "4,50", imageHot: "https://media.discordapp.net/attachments/1491147932911800532/1494108420159045724/emojis.com_americano.png?ex=69e16866&is=69e016e6&hm=3fd3e72942ebfd191a18c30f466972fb8e65e6023a6109992fb14856f61edf60", imageCold: "https://media.discordapp.net/attachments/1491147932911800532/1494108420159045724/emojis.com_americano.png?ex=69e16866&is=69e016e6&hm=3fd3e72942ebfd191a18c30f466972fb8e65e6023a6109992fb14856f61edf60", active: true },
+            { id: 4, name: "Espresso (S/D, Ristretto, Lungo)", hot: "4", cold: "", imageHot: "https://media.discordapp.net/attachments/1491147932911800532/1494108419391492296/emojis.com_espresso-shot.png?ex=69e16866&is=69e016e6&hm=b601e83839d7120938d78da90fe73db3142fea17ae92476bf506c634310d56f7", imageCold: "", active: true },
+            { id: 5, name: "Cortado", hot: "4,50", cold: "", imageHot: "https://media.discordapp.net/attachments/1491147932911800532/1494108419823636642/download_2.png?ex=69e16866&is=69e016e6&hm=0cf17f5ce8ed6b1eb832aa27e12cf7803822520ff14259c4e2413f93b12fdae9", imageCold: "", active: true },
+            { id: 6, name: "Chai Latte (+1$ Dirty ☕)", hot: "4,50 / 5,50", cold: "5", imageHot: "https://media.discordapp.net/attachments/1491147932911800532/1494108389146628136/emojis.com_chai-latte-fall-.png?ex=69e1685f&is=69e016df&hm=6df71d264f1fbb48a967d66e5f6372f8311abc44e56a6d741bfe4a022eb270ad", imageCold: "https://media.discordapp.net/attachments/1491147932911800532/1494108388899160246/emojis.com_iced-chai-tea-latte.png?ex=69e1685f&is=69e016df&hm=cb44bdc0e849ba2b1b50c553bb22bead64555d3bebb1c6f0535555a37d730a7e", active: true },
+            { id: 7, name: "Matcha Latte", hot: "4,75 / 5,50", cold: "5,25", imageHot: "https://media.discordapp.net/attachments/1491147932911800532/1494108388433596546/emojis.com_matcha-latte.png?ex=69e1685e&is=69e016de&hm=786fbdc3df2523a63b0a3091e52dfc65aa4b7d8e210f7421f92a8fde3078cdf3", imageCold: "https://media.discordapp.net/attachments/1491147932911800532/1494108388139991140/emojis.com_iced-matcha-in-a-plastic-can-we-can-see-the-two-color-of-mil-and-of-matcha-.png?ex=69e1685e&is=69e016de&hm=30c9675b880f68631fdc5d5ad51d91dc4db984d1aec3ab31808e80bc49cc7fda", active: true },
+            { id: 8, name: "Mocha", hot: "5,50 / 6,50", cold: "6", imageHot: "https://media.discordapp.net/attachments/1491147932911800532/1494108386646822932/emojis.com_mocha-latte-.png?ex=69e1685e&is=69e016de&hm=9a3cff75c60c58b6bb3563f77dea7b519bef5bce7c62bcf0cccd4cbff4a83e61", imageCold: "https://media.discordapp.net/attachments/1491147932911800532/1494108418569670798/emojis.com_iced-mocha-blanco-.png?ex=69e16866&is=69e016e6&hm=df7aca2498e628d06764dc0ac3501776ff593796ccc9148f864894e5bb40d38e", active: true },
+            { id: 9, name: "Nuages (Matcha, Chai, Latte)", hot: "", cold: "7,50", imageHot: "", imageCold: "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=300&h=300&fit=crop", active: true },
+            { id: 10, name: "Chocolat chaud", hot: "3,50", cold: "", imageHot: "https://media.discordapp.net/attachments/1491147932911800532/1494108418909143050/emojis.com_hot-chocolate-cup.png?ex=69e16866&is=69e016e6&hm=a696cfd2cada9c840474ba8f64296a401326cf5898bfe147e487c8275b967e08", imageCold: "", active: true },
+            { id: 11, name: "Limonade sans sucre", hot: "", cold: "3", imageHot: "", imageCold: "https://media.discordapp.net/attachments/1491147932911800532/1494124850166497380/emojis.com_lemonade-in-a-plastic-cup.png?ex=69e177b3&is=69e02633&hm=7f6d30a50797683c52ca9880a4ca8e6359212cec0f9612a212fbb31b11544356", active: true },
+            { id: 12, name: "Jus sans sucre", hot: "", cold: "3", imageHot: "", imageCold: "https://media.discordapp.net/attachments/1491147932911800532/1494124570662277292/emojis.com_realistic-plastic-domed-lid-cup-with-one-colorful-straw-and-juice-with-ice-inside-of-the-cup..png?ex=69e17771&is=69e025f1&hm=623d89168fcfd1086d3c01836a978bfdef14be797336a0cf04589911a5eeac84", active: true },
+            
         ];
 
         const defaultExtras = {
@@ -378,14 +459,25 @@
 
         function loadMenu() {
             const saved = localStorage.getItem('menuProducts');
-            let products, extras;
+            let extras;
+            
+            products = JSON.parse(JSON.stringify(defaultProducts));
             
             if (saved) {
                 const data = JSON.parse(saved);
-                products = data.products || defaultProducts;
                 extras = data.extras || defaultExtras;
+                
+                if (data.products) {
+                    data.products.forEach(savedProduct => {
+                        const product = products.find(p => p.id === savedProduct.id);
+                        if (product) {
+                            product.active = savedProduct.active;
+                            product.hot = savedProduct.hot;
+                            product.cold = savedProduct.cold;
+                        }
+                    });
+                }
             } else {
-                products = defaultProducts;
                 extras = defaultExtras;
                 localStorage.setItem('menuProducts', JSON.stringify({
                     products: products,
@@ -409,9 +501,12 @@
                     </div>
                 ` : '<div class="price no-price">—</div>';
 
+                const productImage = (p.imageHot || p.imageCold) ? 
+                    `<img src="${p.imageHot || p.imageCold}" class="product-icon" alt="${p.name}">` : '';
+
                 return `
                     <div class="menu-item ${p.active ? '' : 'disabled'}">
-                        <span class="item-name ${p.active ? '' : 'disabled'}">${p.name}</span>
+                        <span class="item-name ${p.active ? '' : 'disabled'}">${productImage}${p.name}</span>
                         ${hotDiv}
                         ${coldDiv}
                     </div>
@@ -443,6 +538,22 @@
 
         loadMenu();
         createCoffeeBeans();
+
+        const juiceOverlay = document.getElementById('juiceOverlay');
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === '1' && !e.repeat) {
+                juiceOverlay.classList.add('show');
+            }
+        });
+
+        document.addEventListener('keyup', () => {
+            juiceOverlay.classList.remove('show');
+        });
+
+        juiceOverlay.addEventListener('click', () => {
+            juiceOverlay.classList.remove('show');
+        });
     </script>
 </body>
 </html>
