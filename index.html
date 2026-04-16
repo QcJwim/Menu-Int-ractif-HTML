@@ -94,7 +94,7 @@
         }
 
         .container {
-            max-width: 600px;
+            max-width: 700px;
             margin: 0 auto;
             padding: 40px 20px;
             position: relative;
@@ -107,12 +107,19 @@
         }
 
         .logo {
-            width: 350px;
+            width: 450px;
             height: auto;
-            margin: 0 auto 20px;
+            margin: 0 auto 5px;
             display: flex;
             align-items: center;
             justify-content: center;
+        }
+
+        .logo a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
         }
 
         .logo img {
@@ -132,7 +139,7 @@
 
         .header-row {
             display: grid;
-            grid-template-columns: 1fr 100px 100px;
+            grid-template-columns: 1fr 120px 120px;
             gap: 10px;
             padding: 15px 20px;
             background: linear-gradient(145deg, #5d4037, #4e342e);
@@ -140,6 +147,7 @@
             font-weight: 700;
             color: #ffcc80;
             font-size: 0.9rem;
+            text-align: center;
         }
 
         .menu {
@@ -151,7 +159,7 @@
 
         .menu-item {
             display: grid;
-            grid-template-columns: 1fr 100px 100px;
+            grid-template-columns: 1fr 120px 120px;
             gap: 10px;
             padding: 18px 20px;
             border-bottom: 1px solid rgba(93, 64, 55, 0.4);
@@ -195,8 +203,25 @@
             gap: 10px;
         }
 
+        .item-images {
+            display: flex;
+            gap: 5px;
+            width: 120px;
+            flex-shrink: 0;
+            justify-content: center;
+        }
+
+        .item-name span {
+            white-space: nowrap;
+        }
+
         .product-icon {
-            width: 40px;
+            width: 45px;
+            height: 45px;
+            object-fit: contain;
+            border-radius: 8px;
+            flex-shrink: 0;
+        }
             height: 40px;
             object-fit: contain;
             border-radius: 8px;
@@ -308,6 +333,55 @@
             margin-bottom: 8px;
         }
 
+        .extra-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+            color: #d7ccc8;
+        }
+
+        .extra-title {
+            font-weight: 700;
+            color: #ffcc80;
+            margin-top: 12px;
+            margin-bottom: 8px;
+        }
+
+        .extra-price {
+            font-weight: 700;
+            color: #ffcc80;
+        }
+
+        .extra-separator {
+            color: #8d6e63;
+        }
+
+        .extra-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .extra-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #d7ccc8;
+        }
+
+        .extra-item img {
+            width: 30px;
+            height: 30px;
+            object-fit: contain;
+        }
+
+        .extra-price-inline {
+            font-weight: 700;
+            color: #ffcc80;
+        }
+
         .admin-link {
             position: fixed;
             bottom: 20px;
@@ -385,6 +459,24 @@
             margin-top: 25px;
             font-size: 0.85rem;
         }
+
+        .juice-item {
+            background: #5d4037;
+            padding: 12px;
+            border-radius: 10px;
+            color: #f5e6d3;
+            font-weight: 700;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .juice-item img {
+            width: 35px;
+            height: 35px;
+            object-fit: contain;
+        }
     </style>
 </head>
 <body>
@@ -392,16 +484,15 @@
         <div class="juice-modal">
             <h2>🧃 Jus Sans Sucre</h2>
             <div class="juice-list">
-                <div class="juice-item">🍉 Melon d'eau</div>
-                <div class="juice-item">🫐 Bleuet</div>
-                <div class="juice-item">🔴 Canneberge</div>
-                <div class="juice-item">🐉 Fruit du dragon</div>
-                <div class="juice-item">🫐 Framboise bleue</div>
-                <div class="juice-item">🍓 Fraise</div>
-                <div class="juice-item">🥭 Mangue</div>
-                <div class="juice-item">🌺 Fruit de la passion</div>
+                <div class="juice-item"><img src="images/melondeau.png" alt=""> Melon d'eau</div>
+                <div class="juice-item"><img src="images/Bleuet.png" alt=""> Bleuet</div>
+                <div class="juice-item"><img src="images/Canneberge.png" alt=""> Canneberge</div>
+                <div class="juice-item"><img src="images/Fruitdudragon.png" alt=""> Fruit du dragon</div>
+                <div class="juice-item"><img src="images/Framboise Bleue.png" alt=""> Framboise bleue</div>
+                <div class="juice-item"><img src="images/Fraise.png" alt=""> Fraise</div>
+                <div class="juice-item"><img src="images/mangue.png" alt=""> Mangue</div>
+                <div class="juice-item"><img src="images/Fruitdelapassion.png" alt=""> Fruit de la passion</div>
             </div>
-            <p class="juice-hint">Relâchez pour fermer</p>
         </div>
     </div>
 
@@ -410,7 +501,9 @@
     <div class="container">
         <header>
             <div class="logo">
-                <img src="https://cdn.discordapp.com/attachments/1491147932911800532/1494091883901620324/logo_andy.png?ex=69e15900&is=69e00780&hm=9b37a7579c652a79c8f5fa37567f88b5d1d465a8b26c9e0f205a5f0b14fd5d70&" alt="Andy Café">
+                <a href="admin.html">
+                    <img src="https://cdn.discordapp.com/attachments/1491147932911800532/1494091883901620324/logo_andy.png?ex=69e15900&is=69e00780&hm=9b37a7579c652a79c8f5fa37567f88b5d1d465a8b26c9e0f205a5f0b14fd5d70&" alt="Andy Café">
+                </a>
             </div>
         </header>
 
@@ -422,7 +515,7 @@
             </div>
 
             <div id="menu-list"></div>
-        </div>
+</div>
 
         <div class="extras">
             <div class="extras-title">⚡ EXTRAS & INFOS</div>
@@ -430,30 +523,42 @@
             </div>
         </div>
 
-        <a href="admin.html" class="admin-link" title="Administration">⚙️</a>
     </div>
 
     <script>
-const defaultProducts = [
+        const defaultProducts = [
             { id: 1, name: "Latte", hot: "4,75 / 5,50", cold: "5", imageHot: "images/Latte.png", imageCold: "images/LatteGlace.png", active: true },
             { id: 2, name: "Cappuccino", hot: "4,75 / 5,50", cold: "", imageHot: "images/Cappuccino.png", imageCold: "", active: true },
             { id: 14, name: "Flat White", hot: "4,75 / 5,50", cold: "", imageHot: "images/FlatWhite.png", imageCold: "", active: true },
-            { id: 3, name: "Americano / Long Black", hot: "4,50", cold: "4,50", imageHot: "images/Americano.png", imageCold: "images/Americano.png", active: true },
+            { id: 3, name: "Americano / Long Black", hot: "4,50", cold: "4,50", imageHot: "images/Americano.png", imageCold: "images/AmericanoGlace.png", active: true },
             { id: 4, name: "Espresso (S/D, Ristretto, Lungo)", hot: "4", cold: "", imageHot: "images/Espresso.png", imageCold: "", active: true },
             { id: 5, name: "Cortado", hot: "4,50", cold: "", imageHot: "images/Cortado.png", imageCold: "", active: true },
             { id: 6, name: "Chai Latte (+1$ Dirty ☕)", hot: "4,50 / 5,50", cold: "5", imageHot: "images/Chailatte.png", imageCold: "images/ChaiLatteGlace.png", active: true },
             { id: 7, name: "Matcha Latte", hot: "4,75 / 5,50", cold: "5,25", imageHot: "images/MatchaLatte.png", imageCold: "images/MatchaLatteGlace.png", active: true },
             { id: 8, name: "Mocha", hot: "5,50 / 6,50", cold: "6", imageHot: "images/Mocha.png", imageCold: "images/MochaGlace.png", active: true },
-            { id: 9, name: "Nuages (Matcha, Chai, Latte)", hot: "", cold: "7,50", imageHot: "", imageCold: "images/MochaGlace.png", active: true },
+            { id: 9, name: "Nuages (Matcha, Chai, Latte)", hot: "", cold: "7,50", imageHot: "", imageCold: "images/Nuages.png", active: true },
             { id: 10, name: "Chocolat chaud", hot: "3,50", cold: "", imageHot: "images/ChocolatChaud.png", imageCold: "", active: true },
             { id: 11, name: "Limonade sans sucre", hot: "", cold: "3", imageHot: "", imageCold: "images/Limonade.png", active: true },
             { id: 12, name: "Jus sans sucre", hot: "", cold: "3", imageHot: "", imageCold: "images/Jussanssucre.png", active: true }
         ];
 
         const defaultExtras = {
-            line1: "☕ Shot Espresso (+2,00) | 🫧 Mousse froide (+1,00)",
-            line2: "🍦 Vanille | 🐿️ Noisette | 🍯 Caramel | 🍓 Fraise | 🫐 Bleuet (+0,50)",
-            line3: "🐮 Vache | 🌾 Avoine | 🚫 Sans lactose"
+            extras: [
+                { name: "Shot Espresso", price: "+2,00" },
+                { name: "Mousse froide", price: "+1,00" }
+            ],
+            syrups: [
+                { name: "Vanille" },
+                { name: "Noisette" },
+                { name: "Caramel" },
+                { name: "Fraise" },
+                { name: "Bleuet" }
+            ],
+            milks: [
+                { name: "Vache" },
+                { name: "Avoine" },
+                { name: "Sans lactose" }
+            ]
         };
 
         function loadMenu() {
@@ -500,12 +605,14 @@ const defaultProducts = [
                     </div>
                 ` : '<div class="price no-price">—</div>';
 
-                const productImage = (p.imageHot || p.imageCold) ? 
-                    `<img src="${p.imageHot || p.imageCold}" class="product-icon" alt="${p.name}">` : '';
+                const productImages = [];
+                if (p.imageHot) productImages.push(`<img src="${p.imageHot}" class="product-icon" alt="${p.name} chaud">`);
+                if (p.imageCold) productImages.push(`<img src="${p.imageCold}" class="product-icon" alt="${p.name} glacé">`);
+                const productImageHtml = `<div class="item-images">${productImages.join('')}</div>`;
 
                 return `
                     <div class="menu-item ${p.active ? '' : 'disabled'}">
-                        <span class="item-name ${p.active ? '' : 'disabled'}">${productImage}${p.name}</span>
+                        <span class="item-name ${p.active ? '' : 'disabled'}">${productImageHtml}<span>${p.name}</span></span>
                         ${hotDiv}
                         ${coldDiv}
                     </div>
@@ -513,11 +620,29 @@ const defaultProducts = [
             }).join('');
 
             const extrasContent = document.getElementById('extras-content');
-            extrasContent.innerHTML = `
-                <p>${extras.line1}</p>
-                <p><strong>Sirop :</strong> ${extras.line2}</p>
-                <p>${extras.line3}</p>
-            `;
+            let extrasHtml = '<div class="extra-items">';
+            
+            (extras.extras || defaultExtras.extras).forEach(e => {
+                extrasHtml += `<div class="extra-item"><img src="images/Espresso.png" alt="${e.name}"><span class="extra-price">${e.name} (${e.price})</span></div>`;
+            });
+            extrasHtml += '</div>';
+            
+            extrasHtml += '<div class="extra-row"><span class="extra-title">Sirop :</span><span class="extra-price-inline">(+0,50)</span></div>';
+            extrasHtml += '<div class="extra-items">';
+            (extras.syrups || defaultExtras.syrups).forEach(s => {
+                extrasHtml += `<div class="extra-item"><img src="images/${s.name}.png" alt="${s.name}"> ${s.name}</div>`;
+            });
+            extrasHtml += '</div>';
+            
+            extrasHtml += '<div class="extra-row extra-title">Choix de lait :</div>';
+            extrasHtml += '<div class="extra-items">';
+            (extras.milks || defaultExtras.milks).forEach(m => {
+                const imgName = m.name.replace(/\s/g, '').replace('Sanslactose', 'SansLactose');
+                extrasHtml += `<div class="extra-item"><img src="images/${imgName}.png" alt="${m.name}"> ${m.name}</div>`;
+            });
+            extrasHtml += '</div>';
+            
+            extrasContent.innerHTML = extrasHtml;
         }
 
         function createCoffeeBeans() {

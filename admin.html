@@ -6,252 +6,61 @@
     <title>Andy Café - Administration</title>
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Lato', sans-serif; background: linear-gradient(135deg, #3e2723 0%, #1a100c 100%); min-height: 100vh; color: #f5e6d3; padding: 20px; }
+        .container { max-width: 1000px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 30px; }
+        h1 { font-size: 2rem; color: #d7ccc8; margin-bottom: 10px; }
+        h2 { font-size: 1.3rem; color: #ffcc80; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 1px solid #5d4037; }
 
-        body {
-            font-family: 'Lato', sans-serif;
-            background: linear-gradient(135deg, #3e2723 0%, #1a100c 100%);
-            min-height: 100vh;
-            color: #f5e6d3;
-            padding: 20px;
-        }
+        .btn { padding: 8px 15px; border: none; border-radius: 8px; cursor: pointer; font-size: 0.85rem; font-weight: 700; transition: all 0.3s; }
+        .btn-save { background: #4caf50; color: white; width: 100%; padding: 15px; font-size: 1.1rem; margin-top: 20px; }
+        .btn-save:hover { background: #45a049; }
+        .btn-reset { background: #f44336; color: white; width: 100%; padding: 12px; font-size: 1rem; margin-top: 10px; }
+        .btn-reset:hover { background: #d32f2f; }
+        .btn-delete { background: #b71c1c; color: white; padding: 6px 12px; font-size: 0.75rem; }
+        .btn-delete:hover { background: #c62828; }
+        .btn-add { background: #2196f3; color: white; }
+        .btn-add:hover { background: #1976d2; }
 
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-        }
+        .admin-section { background: rgba(62, 39, 35, 0.9); border-radius: 15px; padding: 20px; margin-bottom: 20px; border: 1px solid #5d4037; }
+        .admin-header { display: grid; grid-template-columns: 50px 1fr 130px 130px 60px; gap: 10px; padding: 10px; background: #5d4037; border-radius: 10px; font-weight: 700; color: #ffcc80; margin-bottom: 10px; }
+        .product-row { display: grid; grid-template-columns: 50px 1fr 130px 130px 60px; gap: 10px; padding: 10px; border-bottom: 1px solid rgba(93, 64, 55, 0.5); align-items: center; }
+        .product-row:hover { background: rgba(141, 110, 99, 0.2); }
+        .product-row.disabled { opacity: 0.5; }
 
-        header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
+        .toggle { width: 45px; height: 24px; background: #4e342e; border-radius: 12px; cursor: pointer; position: relative; transition: background 0.3s; }
+        .toggle.active { background: #4caf50; }
+        .toggle::after { content: ''; position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; background: white; border-radius: 50%; transition: transform 0.3s; }
+        .toggle.active::after { transform: translateX(21px); }
 
-        h1 {
-            font-size: 2rem;
-            color: #d7ccc8;
-            margin-bottom: 10px;
-        }
+        .product-name { font-weight: 700; color: #f5e6d3; font-size: 0.95rem; }
+        .product-name.disabled { text-decoration: line-through; }
 
-        .btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            font-weight: 700;
-            transition: all 0.3s;
-        }
+        input { width: 100%; padding: 8px 12px; background: #3e2723; border: 1px solid #5d4037; border-radius: 8px; color: #ffcc80; font-size: 0.85rem; }
+        input:focus { outline: none; border-color: #ffcc80; }
 
-        .btn-save {
-            background: #4caf50;
-            color: white;
-            width: 100%;
-            padding: 15px;
-            font-size: 1.1rem;
-            margin-top: 20px;
-        }
+        .message { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #4caf50; color: white; padding: 15px 30px; border-radius: 10px; font-weight: 700; display: none; z-index: 1000; }
 
-        .btn-save:hover {
-            background: #45a049;
-        }
+        .add-form { background: rgba(78, 52, 46, 0.9); border-radius: 15px; padding: 20px; margin-bottom: 20px; border: 2px dashed #8d6e63; }
+        .add-form h3 { color: #ffcc80; margin-bottom: 15px; font-size: 1.1rem; }
+        .form-row { display: grid; grid-template-columns: 1fr 130px 130px auto; gap: 10px; align-items: center; margin-bottom: 10px; }
+        .form-row:last-child { margin-bottom: 0; }
 
-        .btn-reset {
-            background: #f44336;
-            color: white;
-            width: 100%;
-            padding: 12px;
-            font-size: 1rem;
-            margin-top: 10px;
-        }
+        .back-link { position: fixed; top: 20px; left: 20px; color: #8d6e63; text-decoration: none; font-size: 0.9rem; opacity: 0.6; transition: opacity 0.3s; }
+        .back-link:hover { opacity: 1; }
+        .back-link span { font-size: 1.2rem; margin-right: 5px; }
 
-        .btn-reset:hover {
-            background: #d32f2f;
-        }
+        .extra-category { margin-bottom: 20px; }
+        .extra-category:last-child { margin-bottom: 0; }
+        .extra-category h3 { color: #ffcc80; font-size: 1rem; margin-bottom: 10px; }
+        .extra-item-row { display: grid; grid-template-columns: 50px 1fr 120px 60px; gap: 10px; padding: 8px; background: rgba(62, 39, 35, 0.5); border-radius: 8px; margin-bottom: 8px; align-items: center; }
+        .extra-item-row:last-child { margin-bottom: 0; }
+        .extra-item-row input { font-size: 0.85rem; }
+        .extra-price-note { font-size: 0.75rem; color: #a1887f; }
 
-        .btn-delete {
-            background: #b71c1c;
-            color: white;
-            padding: 8px 15px;
-            font-size: 0.8rem;
-        }
-
-        .btn-delete:hover {
-            background: #c62828;
-        }
-
-        .btn-add {
-            background: #2196f3;
-            color: white;
-            padding: 10px 20px;
-            font-size: 0.9rem;
-        }
-
-        .btn-add:hover {
-            background: #1976d2;
-        }
-
-        .admin-section {
-            background: rgba(62, 39, 35, 0.9);
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
-            border: 1px solid #5d4037;
-        }
-
-        .section-title {
-            font-size: 1.1rem;
-            color: #ffcc80;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #5d4037;
-        }
-
-        .admin-header {
-            display: grid;
-            grid-template-columns: 50px 1fr 140px 140px 80px;
-            gap: 10px;
-            padding: 10px;
-            background: #5d4037;
-            border-radius: 10px;
-            font-weight: 700;
-            color: #ffcc80;
-            margin-bottom: 10px;
-        }
-
-        .product-row {
-            display: grid;
-            grid-template-columns: 50px 1fr 140px 140px 80px;
-            gap: 10px;
-            padding: 12px 10px;
-            border-bottom: 1px solid rgba(93, 64, 55, 0.5);
-            align-items: center;
-        }
-
-        .product-row:hover {
-            background: rgba(141, 110, 99, 0.2);
-        }
-
-        .product-row.disabled {
-            opacity: 0.5;
-        }
-
-        .toggle {
-            width: 50px;
-            height: 26px;
-            background: #4e342e;
-            border-radius: 13px;
-            cursor: pointer;
-            position: relative;
-            transition: background 0.3s;
-        }
-
-        .toggle.active {
-            background: #4caf50;
-        }
-
-        .toggle::after {
-            content: '';
-            position: absolute;
-            top: 3px;
-            left: 3px;
-            width: 20px;
-            height: 20px;
-            background: white;
-            border-radius: 50%;
-            transition: transform 0.3s;
-        }
-
-        .toggle.active::after {
-            transform: translateX(24px);
-        }
-
-        .product-name {
-            font-weight: 700;
-            color: #f5e6d3;
-        }
-
-        .product-name.disabled {
-            text-decoration: line-through;
-        }
-
-        input, textarea {
-            width: 100%;
-            padding: 8px 12px;
-            background: #3e2723;
-            border: 1px solid #5d4037;
-            border-radius: 8px;
-            color: #ffcc80;
-            font-size: 0.9rem;
-        }
-
-        input:focus, textarea:focus {
-            outline: none;
-            border-color: #ffcc80;
-        }
-
-        textarea {
-            resize: vertical;
-            min-height: 60px;
-        }
-
-        .message {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #4caf50;
-            color: white;
-            padding: 15px 30px;
-            border-radius: 10px;
-            font-weight: 700;
-            display: none;
-            z-index: 1000;
-        }
-
-        .add-form {
-            background: rgba(78, 52, 46, 0.9);
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
-            border: 2px dashed #8d6e63;
-        }
-
-        .add-form h3 {
-            color: #ffcc80;
-            margin-bottom: 15px;
-            font-size: 1.1rem;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 140px 140px auto;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .back-link {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            color: #8d6e63;
-            text-decoration: none;
-            font-size: 0.9rem;
-            opacity: 0.6;
-            transition: opacity 0.3s;
-        }
-
-        .back-link:hover {
-            opacity: 1;
-        }
-
-        .back-link span {
-            font-size: 1.2rem;
-            margin-right: 5px;
-        }
+        .syrup-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 10px; }
+        .syrup-item { display: grid; grid-template-columns: 50px 1fr 100px 50px; gap: 10px; padding: 10px; background: rgba(62, 39, 35, 0.5); border-radius: 8px; align-items: center; }
     </style>
 </head>
 <body>
@@ -259,14 +68,14 @@
 
     <div class="container">
         <header>
-            <h1>⚙️ Administration du Menu</h1>
-            <p style="color: #a1887f;">Modifiez les prix et gérez les produits</p>
+            <h1>⚙️ Administration</h1>
+            <p style="color: #a1887f;">Gérez les produits et les extras</p>
         </header>
 
         <div class="add-form">
-            <h3>+ Ajouter un nouveau produit</h3>
+            <h3>+ Ajouter un produit</h3>
             <div class="form-row">
-                <input type="text" id="newName" placeholder="Nom du produit (ex: ☕ Mon Café)">
+                <input type="text" id="newName" placeholder="Nom du produit">
                 <input type="text" id="newHot" placeholder="Prix Chaud">
                 <input type="text" id="newCold" placeholder="Prix Glacé">
                 <button class="btn btn-add" onclick="addProduct()">Ajouter</button>
@@ -274,33 +83,43 @@
         </div>
 
         <div class="admin-section">
-            <div class="section-title">☕ Produits du Menu</div>
+            <h2>☕ Produits du Menu</h2>
             <div class="admin-header">
                 <span>Actif</span>
                 <span>Produit</span>
                 <span>Prix Chaud</span>
                 <span>Prix Glacé</span>
-                <span>Action</span>
+                <span></span>
             </div>
-
             <div id="product-list"></div>
         </div>
 
         <div class="admin-section">
-            <div class="section-title">⚡ Extras & Infos</div>
-            <div class="form-row" style="margin-bottom: 15px;">
-                <input type="text" id="extraLine1" placeholder="Ligne 1 (ex: Shot Espresso (+2,00) | Mousse froide (+1,00))">
+            <h2>⚡ Extras</h2>
+            
+            <div class="extra-category">
+                <h3>Extra</h3>
+                <div id="extras-list"></div>
+                <button class="btn btn-add" style="margin-top: 10px;" onclick="addExtra()">+ Ajouter</button>
             </div>
-            <div class="form-row" style="margin-bottom: 15px;">
-                <input type="text" id="extraLine2" placeholder="Ligne 2 (ex: Sirop : Vanille | Noisette | Caramel (+0,50))">
+
+            <div class="extra-category">
+                <h3>Sirop (+0,50)</h3>
+                <div class="syrup-grid">
+                    <div id="syrup-list"></div>
+                </div>
+                <button class="btn btn-add" style="margin-top: 10px;" onclick="addSyrup()">+ Ajouter</button>
             </div>
-            <div class="form-row">
-                <input type="text" id="extraLine3" placeholder="Ligne 3 (ex: Choix de lait : Vache | Avoine | Sans lactose)">
+
+            <div class="extra-category">
+                <h3>Choix de lait</h3>
+                <div id="milk-list"></div>
+                <button class="btn btn-add" style="margin-top: 10px;" onclick="addMilk()">+ Ajouter</button>
             </div>
         </div>
 
-        <button class="btn btn-save" onclick="saveChanges()">💾 Enregistrer les modifications</button>
-        <button class="btn btn-reset" onclick="resetToDefault()">🔄 Réinitialiser (données par défaut)</button>
+        <button class="btn btn-save" onclick="saveChanges()">💾 Enregistrer</button>
+        <button class="btn btn-reset" onclick="resetToDefault()">🔄 Réinitialiser</button>
     </div>
 
     <div class="message" id="message">Modifications enregistrées !</div>
@@ -313,41 +132,53 @@
             { id: 3, name: "Americano / Long Black", hot: "4,50", cold: "4,50", active: true },
             { id: 4, name: "Espresso (S/D, Ristretto, Lungo)", hot: "4", cold: "", active: true },
             { id: 5, name: "Cortado", hot: "4,50", cold: "", active: true },
-            { id: 6, name: "Chai Latte (+1$ Dirty ☕)", hot: "4,50 / 5,50", cold: "5", active: true },
+            { id: 6, name: "Chai Latte (+1$ Dirty)", hot: "4,50 / 5,50", cold: "5", active: true },
             { id: 7, name: "Matcha Latte", hot: "4,75 / 5,50", cold: "5,25", active: true },
             { id: 8, name: "Mocha", hot: "5,50 / 6,50", cold: "6", active: true },
             { id: 9, name: "Nuages (Matcha, Chai, Latte)", hot: "", cold: "7,50", active: true },
             { id: 10, name: "Chocolat chaud", hot: "3,50", cold: "", active: true },
             { id: 11, name: "Limonade sans sucre", hot: "", cold: "3", active: true },
-            { id: 12, name: "Jus sans sucre", hot: "", cold: "3", active: true },
-            
+            { id: 12, name: "Jus sans sucre", hot: "", cold: "3", active: true }
         ];
 
         const defaultExtras = {
-            line1: "☕ Shot Espresso (+2,00) | 🫧 Mousse froide (+1,00)",
-            line2: "🍦 Vanille | 🐿️ Noisette | 🍯 Caramel | 🍓 Fraise | 🫐 Bleuet (+0,50)",
-            line3: "🐮 Vache | 🌾 Avoine | 🚫 Sans lactose"
+            extras: [
+                { id: 1, name: "Shot Espresso", price: "+2,00", active: true },
+                { id: 2, name: "Mousse froide", price: "+1,00", active: true }
+            ],
+            syrups: [
+                { id: 1, name: "Vanille", active: true },
+                { id: 2, name: "Noisette", active: true },
+                { id: 3, name: "Caramel", active: true },
+                { id: 4, name: "Fraise", active: true },
+                { id: 5, name: "Bleuet", active: true }
+            ],
+            milks: [
+                { id: 1, name: "Vache", active: true },
+                { id: 2, name: "Avoine", active: true },
+                { id: 3, name: "Sans lactose", active: true }
+            ]
         };
 
         let products = [];
-        let extras = {};
-        let nextId = 15;
+        let extras = { extras: [], syrups: [], milks: [] };
+        let nextProductId = 20;
+        let nextExtraId = 10;
 
-        function loadProducts() {
+        function loadData() {
             const saved = localStorage.getItem('menuProducts');
             if (saved) {
                 const data = JSON.parse(saved);
                 products = data.products || defaultProducts;
-                extras = data.extras || { ...defaultExtras };
+                extras = data.extras || defaultExtras;
                 const maxId = Math.max(...products.map(p => p.id), 0);
-                nextId = maxId + 1;
+                nextProductId = maxId + 1;
             } else {
                 products = JSON.parse(JSON.stringify(defaultProducts));
-                extras = { ...defaultExtras };
-                nextId = 15;
+                extras = JSON.parse(JSON.stringify(defaultExtras));
             }
             renderProducts();
-            loadExtras();
+            renderExtras();
         }
 
         function renderProducts() {
@@ -356,35 +187,59 @@
                 <div class="product-row ${p.active ? '' : 'disabled'}">
                     <div class="toggle ${p.active ? 'active' : ''}" onclick="toggleProduct(${p.id})"></div>
                     <span class="product-name ${p.active ? '' : 'disabled'}">${p.name}</span>
-                    <input type="text" value="${p.hot}" placeholder="—" onchange="updatePrice(${p.id}, 'hot', this.value)">
-                    <input type="text" value="${p.cold}" placeholder="—" onchange="updatePrice(${p.id}, 'cold', this.value)">
-                    <button class="btn btn-delete" onclick="deleteProduct(${p.id})">Suppr</button>
+                    <input type="text" value="${p.hot}" placeholder="—" onchange="updateProduct(${p.id}, 'hot', this.value)">
+                    <input type="text" value="${p.cold}" placeholder="—" onchange="updateProduct(${p.id}, 'cold', this.value)">
+                    <button class="btn btn-delete" onclick="deleteProduct(${p.id})">X</button>
                 </div>
             `).join('');
         }
 
-        function loadExtras() {
-            document.getElementById('extraLine1').value = extras.line1 || '';
-            document.getElementById('extraLine2').value = extras.line2 || '';
-            document.getElementById('extraLine3').value = extras.line3 || '';
+        function renderExtras() {
+            const extrasList = document.getElementById('extras-list');
+            extrasList.innerHTML = extras.extras.map(e => `
+                <div class="extra-item-row">
+                    <div class="toggle ${e.active ? 'active' : ''}" onclick="toggleExtra(${e.id}, 'extras')"></div>
+                    <input type="text" value="${e.name}" onchange="updateExtra(${e.id}, 'extras', 'name', this.value)">
+                    <input type="text" value="${e.price}" onchange="updateExtra(${e.id}, 'extras', 'price', this.value)">
+                    <button class="btn btn-delete" onclick="deleteExtra(${e.id}, 'extras')">X</button>
+                </div>
+            `).join('');
+
+            const syrupList = document.getElementById('syrup-list');
+            syrupList.innerHTML = extras.syrups.map(s => `
+                <div class="syrup-item">
+                    <div class="toggle ${s.active ? 'active' : ''}" onclick="toggleExtra(${s.id}, 'syrups')"></div>
+                    <input type="text" value="${s.name}" onchange="updateExtra(${s.id}, 'syrups', 'name', this.value)">
+                    <span class="extra-price-note">(+0,50)</span>
+                    <button class="btn btn-delete" onclick="deleteExtra(${s.id}, 'syrups')">X</button>
+                </div>
+            `).join('');
+
+            const milkList = document.getElementById('milk-list');
+            milkList.innerHTML = extras.milks.map(m => `
+                <div class="extra-item-row">
+                    <div class="toggle ${m.active ? 'active' : ''}" onclick="toggleExtra(${m.id}, 'milks')"></div>
+                    <input type="text" value="${m.name}" onchange="updateExtra(${m.id}, 'milks', 'name', this.value)">
+                    <span></span>
+                    <button class="btn btn-delete" onclick="deleteExtra(${m.id}, 'milks')">X</button>
+                </div>
+            `).join('');
         }
 
         function toggleProduct(id) {
-            const product = products.find(p => p.id === id);
-            if (product) {
-                product.active = !product.active;
-                renderProducts();
-            }
+            const p = products.find(x => x.id === id);
+            if (p) { p.active = !p.active; renderProducts(); }
         }
 
-        function updatePrice(id, type, value) {
-            const product = products.find(p => p.id === id);
-            if (product) {
-                if (type === 'hot') {
-                    product.hot = value;
-                } else {
-                    product.cold = value;
-                }
+        function updateProduct(id, field, value) {
+            const p = products.find(x => x.id === id);
+            if (p) { p[field] = value; }
+        }
+
+        function deleteProduct(id) {
+            if (confirm('Supprimer ce produit ?')) {
+                products = products.filter(p => p.id !== id);
+                renderProducts();
             }
         }
 
@@ -392,78 +247,65 @@
             const name = document.getElementById('newName').value.trim();
             const hot = document.getElementById('newHot').value.trim();
             const cold = document.getElementById('newCold').value.trim();
-
-            if (!name) {
-                alert('Veuillez entrer un nom de produit');
-                return;
-            }
-
-            products.push({
-                id: nextId++,
-                name: name,
-                hot: hot,
-                cold: cold,
-                active: true
-            });
-
+            if (!name) { alert('Entrez un nom'); return; }
+            products.push({ id: nextProductId++, name, hot, cold, active: true });
             document.getElementById('newName').value = '';
             document.getElementById('newHot').value = '';
             document.getElementById('newCold').value = '';
-
             renderProducts();
-            saveChanges();
         }
 
-        function deleteProduct(id) {
-            if (confirm('Voulez-vous vraiment supprimer ce produit ?')) {
-                products = products.filter(p => p.id !== id);
-                renderProducts();
-                saveChanges();
+        function toggleExtra(id, type) {
+            const item = extras[type].find(x => x.id === id);
+            if (item) { item.active = !item.active; renderExtras(); }
+        }
+
+        function updateExtra(id, type, field, value) {
+            const item = extras[type].find(x => x.id === id);
+            if (item) { item[field] = value; }
+        }
+
+        function deleteExtra(id, type) {
+            if (confirm('Supprimer ?')) {
+                extras[type] = extras[type].filter(x => x.id !== id);
+                renderExtras();
             }
+        }
+
+        function addExtra() {
+            extras.extras.push({ id: nextExtraId++, name: "Nouveau", price: "+0,00", active: true });
+            renderExtras();
+        }
+
+        function addSyrup() {
+            extras.syrups.push({ id: nextExtraId++, name: "Nouveau", active: true });
+            renderExtras();
+        }
+
+        function addMilk() {
+            extras.milks.push({ id: nextExtraId++, name: "Nouveau", active: true });
+            renderExtras();
         }
 
         function saveChanges() {
-            extras = {
-                line1: document.getElementById('extraLine1').value,
-                line2: document.getElementById('extraLine2').value,
-                line3: document.getElementById('extraLine3').value
-            };
-
-            localStorage.setItem('menuProducts', JSON.stringify({
-                products: products,
-                extras: extras
-            }));
-            
-            const message = document.getElementById('message');
-            message.style.display = 'block';
-            setTimeout(() => {
-                message.style.display = 'none';
-            }, 2000);
+            localStorage.setItem('menuProducts', JSON.stringify({ products, extras }));
+            const msg = document.getElementById('message');
+            msg.style.display = 'block';
+            setTimeout(() => msg.style.display = 'none', 2000);
         }
 
         function resetToDefault() {
-            if (confirm('Voulez-vous vraiment réinitialiser toutes les données ?')) {
+            if (confirm('Réinitialiser tout ?')) {
                 products = JSON.parse(JSON.stringify(defaultProducts));
-                extras = { ...defaultExtras };
-                nextId = 15;
-                localStorage.setItem('menuProducts', JSON.stringify({
-                    products: products,
-                    extras: extras
-                }));
+                extras = JSON.parse(JSON.stringify(defaultExtras));
+                nextProductId = 20;
+                localStorage.setItem('menuProducts', JSON.stringify({ products, extras }));
                 renderProducts();
-                loadExtras();
-                
-                const message = document.getElementById('message');
-                message.textContent = 'Données réinitialisées !';
-                message.style.display = 'block';
-                setTimeout(() => {
-                    message.style.display = 'none';
-                    message.textContent = 'Modifications enregistrées !';
-                }, 2000);
+                renderExtras();
             }
         }
 
-        loadProducts();
+        loadData();
     </script>
 </body>
 </html>
