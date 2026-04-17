@@ -510,7 +510,7 @@
 </div>
 
         <div class="extras">
-            <div class="extras-title">⚡ EXTRAS & INFOS</div>
+            <div class="extras-title"><a href="admin.html" style="color: inherit; text-decoration: none;">⚡ EXTRAS & INFOS</a></div>
             <div class="extras-content" id="extras-content">
             </div>
         </div>
@@ -557,23 +557,26 @@
             const saved = localStorage.getItem('menuProducts');
             let extras;
             
-            products = JSON.parse(JSON.stringify(defaultProducts));
-            
             if (saved) {
                 const data = JSON.parse(saved);
-                extras = data.extras || defaultExtras;
+                const savedProducts = data.products && data.products.length > 0 ? data.products : null;
                 
-                if (data.products) {
-                    data.products.forEach(savedProduct => {
-                        const product = products.find(p => p.id === savedProduct.id);
-                        if (product) {
-                            product.active = savedProduct.active;
-                            product.hot = savedProduct.hot;
-                            product.cold = savedProduct.cold;
-                        }
+                if (savedProducts) {
+                    products = savedProducts.map(savedP => {
+                        const defaultP = defaultProducts.find(dp => dp.id === savedP.id);
+                        return {
+                            ...(defaultP || {}),
+                            ...savedP,
+                            imageHot: defaultP ? defaultP.imageHot : savedP.imageHot,
+                            imageCold: defaultP ? defaultP.imageCold : savedP.imageCold
+                        };
                     });
+                } else {
+                    products = JSON.parse(JSON.stringify(defaultProducts));
                 }
+                extras = data.extras || defaultExtras;
             } else {
+                products = JSON.parse(JSON.stringify(defaultProducts));
                 extras = defaultExtras;
                 localStorage.setItem('menuProducts', JSON.stringify({
                     products: products,
