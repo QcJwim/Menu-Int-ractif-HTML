@@ -557,26 +557,23 @@
             const saved = localStorage.getItem('menuProducts');
             let extras;
             
+            products = JSON.parse(JSON.stringify(defaultProducts));
+            
             if (saved) {
                 const data = JSON.parse(saved);
-                const savedProducts = data.products && data.products.length > 0 ? data.products : null;
-                
-                if (savedProducts) {
-                    products = savedProducts.map(savedP => {
-                        const defaultP = defaultProducts.find(dp => dp.id === savedP.id);
-                        return {
-                            ...(defaultP || {}),
-                            ...savedP,
-                            imageHot: defaultP ? defaultP.imageHot : savedP.imageHot,
-                            imageCold: defaultP ? defaultP.imageCold : savedP.imageCold
-                        };
-                    });
-                } else {
-                    products = JSON.parse(JSON.stringify(defaultProducts));
-                }
                 extras = data.extras || defaultExtras;
+                
+                if (data.products && data.products.length > 0) {
+                    data.products.forEach(savedP => {
+                        const product = products.find(p => p.id === savedP.id);
+                        if (product) {
+                            product.hot = savedP.hot || product.hot;
+                            product.cold = savedP.cold || product.cold;
+                            product.active = savedP.active;
+                        }
+                    });
+                }
             } else {
-                products = JSON.parse(JSON.stringify(defaultProducts));
                 extras = defaultExtras;
                 localStorage.setItem('menuProducts', JSON.stringify({
                     products: products,
